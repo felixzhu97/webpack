@@ -1,0 +1,19 @@
+@startuml container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Webpack容器图
+
+System_Boundary(webpack系统, "Webpack系统") {
+    Container(核心引擎, "核心引擎", "JavaScript", "负责模块解析、依赖分析和打包")
+    Container(插件系统, "插件系统", "JavaScript", "提供扩展点和生命周期钩子")
+    Container(加载器系统, "加载器系统", "JavaScript", "转换各种资源文件")
+    Container(缓存系统, "缓存系统", "文件系统", "缓存构建结果加速重复构建")
+    Container(配置系统, "配置系统", "JavaScript", "处理webpack.config.js配置")
+}
+
+Rel(核心引擎, 插件系统, "调用", "Tapable API")
+Rel(核心引擎, 加载器系统, "调用", "Loader API")
+Rel(核心引擎, 缓存系统, "读写", "文件系统")
+Rel(核心引擎, 配置系统, "读取", "配置对象")
+Rel(插件系统, 加载器系统, "增强", "自定义加载器")
+@enduml

@@ -1,0 +1,44 @@
+@startuml code
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Webpack核心代码实现 (v5.89.0)
+
+' ========== 解析器模块 ==========
+Container_Boundary(解析器, "解析器模块") {
+    Component(acorn, "acorn", "JavaScript解析器\n• 版本: 8.8.2\n• 支持ES2022\n• 生成AST")
+    Component(enhanced_resolve, "enhanced-resolve", "模块路径解析\n• 支持alias\n• 支持extensions\n• 处理node_modules")
+    Component(webpack_sources, "webpack-sources", "源码处理\n• SourceMap生成\n• 源码合并\n• 缓存处理")
+}
+
+' ========== 编译器模块 ==========
+Container_Boundary(编译器, "编译器模块") {
+    Component(tapable, "tapable", "插件系统核心\n• Hook类型: Sync/Async\n• 拦截器机制\n• Stage控制")
+    Component(loader_runner, "loader-runner", "加载器执行\n• pitch阶段\n• 上下文API\n• 异步处理")
+    Component(module_federation, "module-federation", "模块联邦\n• 远程模块加载\n• 共享依赖\n• 运行时集成")
+}
+
+' ========== 优化器模块 ==========
+Container_Boundary(优化器, "优化器模块") {
+    Component(terser, "terser", "代码压缩\n• ES6+支持\n• 死代码消除\n• 作用域分析")
+    Component(scope_hoisting, "scope-hoisting", "作用域提升\n• 减少闭包\n• 内联模块\n• 提升性能")
+    Component(split_chunks, "split-chunks", "代码分割\n• 公共提取\n• 按需加载\n• 缓存优化")
+}
+
+' ========== 模块关系 ==========
+' 解析器流程
+Rel(acorn, enhanced_resolve, "生成AST", "JavaScript解析")
+Rel(enhanced_resolve, webpack_sources, "解析路径", "模块定位")
+
+' 编译器流程
+Rel(tapable, loader_runner, "插件注入", "Hook机制")
+Rel(loader_runner, module_federation, "处理", "远程模块")
+
+' 优化流程
+Rel(loader_runner, terser, "输出", "代码压缩")
+Rel(loader_runner, scope_hoisting, "分析", "作用域优化")
+Rel(loader_runner, split_chunks, "分割", "代码拆分")
+
+' 跨模块流程
+Rel(webpack_sources, loader_runner, "源码", "加载处理")
+Rel(module_federation, split_chunks, "共享", "依赖管理")
+@enduml

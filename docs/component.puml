@@ -1,0 +1,19 @@
+@startuml component
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Webpack组件图
+
+Container_Boundary(核心引擎, "核心引擎") {
+    Component(解析器, "解析器", "分析模块语法和依赖关系")
+    Component(编译器, "编译器", "将模块编译为可执行代码")
+    Component(优化器, "优化器", "优化输出包大小和性能")
+    Component(依赖图, "依赖图", "维护模块间依赖关系")
+    Component(资源生成器, "资源生成器", "生成最终输出文件")
+}
+
+Rel(解析器, 编译器, "传递AST", "抽象语法树")
+Rel(编译器, 优化器, "传递代码", "中间表示")
+Rel(优化器, 资源生成器, "优化后代码", "最终输出")
+Rel(依赖图, 解析器, "记录依赖", "依赖关系")
+Rel(依赖图, 编译器, "提供顺序", "构建顺序")
+Rel(依赖图, 资源生成器, "提供映射", "文件映射")

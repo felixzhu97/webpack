@@ -1,0 +1,18 @@
+@startuml context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Webpack系统上下文图
+
+Person(开发者, "开发者", "使用Webpack构建前端应用")
+Person(运维, "运维人员", "部署和监控构建结果")
+
+System(webpack, "Webpack", "JavaScript模块打包工具")
+System(git, "Git仓库", "版本控制系统")
+System(npm, "NPM仓库", "包管理系统")
+
+Rel(开发者, webpack, "运行构建", "CLI/API")
+Rel(开发者, git, "提交代码", "Git命令")
+Rel(开发者, npm, "管理依赖", "npm命令")
+Rel(webpack, npm, "获取依赖", "HTTP请求")
+Rel(运维, webpack, "监控", "日志/指标")
+@enduml
